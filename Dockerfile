@@ -7,6 +7,21 @@ RUN yum update -y && \
     yum install -y ondemand && \
     yum clean all
 
+# Install Ruby 2.5 and Node.js 10
+RUN yum install -y centos-release-scl-rh
+RUN yum-config-manager --enable rhel-server-rhscl-7-rpms
+RUN yum install -y rh-ruby25
+RUN yum install -y rh-nodejs10
+
+# Copy in the wrapper scripts
+COPY ruby.sh /
+COPY nodejs.sh /
+WORKDIR /
+RUN chmod +x ruby.sh
+RUN chmod +x nodejs.sh
+RUN /ruby.sh
+RUN /nodejs.sh
+
 # isntall openid auth mod
 RUN yum install -y httpd24-mod_auth_openidc
 # config file for ood-portal-generator
